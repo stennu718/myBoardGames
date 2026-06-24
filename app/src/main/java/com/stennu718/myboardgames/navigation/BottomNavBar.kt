@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,9 +27,9 @@ data class BottomNavItem(
 
 val bottomNavItems = listOf(
     BottomNavItem(Screen.Chess, "Chess", Icons.Default.Psychology),
+    BottomNavItem(Screen.Multiplayer, "VS", Icons.Default.People),
     BottomNavItem(Screen.PuzzleRush, "Rush", Icons.Default.Speed),
     BottomNavItem(Screen.Stats, "Stats", Icons.Default.Analytics),
-    BottomNavItem(Screen.Daily, "Daily", Icons.Default.Today),
     BottomNavItem(Screen.Profile, "Profile", Icons.Default.Person),
 )
 

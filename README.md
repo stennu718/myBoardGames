@@ -10,7 +10,8 @@ Built with Kotlin + Jetpack Compose. All games are self-contained — no third-p
 
 A single offline-first Android app with fully local game logic:
 
-- ♟️ **Chess** — play vs CPU, puzzles, Puzzle Rush mode, game analysis
+- ♟️ **Chess** — play vs CPU, Puzzle Rush mode, multiplayer, game analysis
+- 👥 **Multiplayer** — play chess with friends via Bluetooth
 - ⚡ **Puzzle Rush** — timed chess puzzle streak with ELO rating
 - 🏁 **Checkers** — play vs CPU
 - 🔢 **Sudoku** — infinite generated puzzles, difficulty levels
@@ -20,8 +21,10 @@ A single offline-first Android app with fully local game logic:
 - 🎨 **Premium Themes** — 10 board themes, 6 color schemes
 - 📱 **Home Widget** — daily puzzle preview
 - ☁️ **Cloud Sync** — cross-device progress sync (Firebase-ready)
-
-**No accounts. No internet. No APIs. Just games.**
+- 🎬 **Onboarding** — animated intro with premium upsell
+- 🔊 **Sound & Haptics** — tactile feedback for every action
+- ⭐ **In-App Review** — smart review prompt
+- 📣 **Ads** — free tier monetization
 
 ---
 
@@ -32,6 +35,7 @@ A single offline-first Android app with fully local game logic:
 | Chess Engine (full legal moves, FEN, castling, en passant, promotion) | ✅ | 16 |
 | Chess AI (minimax + alpha-beta, piece-square tables) | ✅ | ✅ |
 | Chess Board UI (tap controls, difficulty selector) | ✅ | — |
+| Multiplayer (Bluetooth P2P, host/join lobby) | ✅ | 8 |
 | Puzzle Rush (timed streak, ELO rating, theme stats) | ✅ | 8 |
 | Checkers Engine (multi-jumps, king promotion) | ✅ | 8 |
 | Checkers Board UI | ✅ | — |
@@ -49,12 +53,16 @@ A single offline-first Android app with fully local game logic:
 | Cloud Sync Manager | ✅ | 6 |
 | Daily Challenges (deterministic per date) | ✅ | 6 |
 | Gamification (XP, levels, 12 achievements) | ✅ | 8 |
+| Onboarding (5-page animated intro) | ✅ | 6 |
+| Sound & Haptics (9 effect types) | ✅ | 2 |
+| In-App Review (smart prompt) | ✅ | 1 |
+| Ad Manager (interstitial + banner) | ✅ | — |
 | Room Database (stats, achievements) | ✅ | — |
 | Hilt DI | ✅ | — |
 | Material 3 Theme (dynamic colors) | ✅ | — |
 | GitHub Actions CI | ✅ | — |
 
-**Total: 51 Kotlin files, 5,366 lines, 10 test files, ~80 test cases**
+**Total: 60+ Kotlin files, ~6,000 lines, 13 test files, ~90 test cases**
 
 ---
 
@@ -66,9 +74,13 @@ myBoardGames/
 ├── core/
 │   ├── common/             # Shared utilities, extensions
 │   ├── database/           # Room entities, DAOs (stats, achievements)
-│   └── ui/                 # Shared UI components, theme, ThemeRepository
+│   ├── ui/                 # Shared UI components, theme, ThemeRepository
+│   ├── sound/              # SoundManager (haptics + audio)
+│   ├── review/             # ReviewManager (in-app review)
+│   └── ads/                # AdManager (free tier ads)
 ├── feature/
 │   ├── chess/              # Chess game + engine + AI + board UI
+│   ├── multiplayer/        # Bluetooth P2P multiplayer
 │   ├── checkers/           # Checkers game + engine
 │   ├── sudoku/             # Sudoku generator + solver + UI
 │   ├── blockudoku/         # Blockudoku engine + UI
@@ -79,7 +91,8 @@ myBoardGames/
 │   ├── premium/            # Premium paywall + theme unlocks
 │   ├── stats/              # Statistics dashboard with charts
 │   ├── widget/             # Home screen Glance widget
-│   └── cloud/              # Cloud sync manager
+│   ├── cloud/              # Cloud sync manager
+│   └── onboarding/         # Animated onboarding flow
 └── build-logic/            # Convention plugins
 ```
 
@@ -90,16 +103,16 @@ myBoardGames/
 | Tab | Screen | Description |
 |-----|--------|-------------|
 | ♟ | Chess | Play vs CPU, Puzzle Rush entry |
-| ⚡ Puzzle Rush | Timed chess puzzles, ELO rating, streak |
+| 👥 VS | Multiplayer | Bluetooth P2P chess |
+| ⚡ Rush | Puzzle Rush | Timed chess puzzles, ELO rating |
 | 📊 Stats | Rating chart, weekly activity, game breakdown |
-| 📅 Daily | Daily challenges with XP rewards |
 | 👤 Profile | Level, XP, achievements, per-game stats |
 
 **Other games accessible from Chess screen menu:** Checkers, Sudoku, Blockudoku, 2048, Minesweeper, Memory, Tic-Tac-Toe.
 
 ---
 
-## 💰 Monetization (Premium)
+## 💰 Monetization
 
 **Free tier:** All games playable, basic theme, ads
 **Premium ($4.99 lifetime):**
@@ -121,10 +134,15 @@ myBoardGames/
 - Piece-square tables for positional evaluation
 - Perft validation (20 → 400 → 8902)
 
+### Multiplayer
+- Bluetooth RFCOMM protocol
+- Host/Client roles
+- Real-time move synchronization
+- Resign/disconnect handling
+
 ### Sudoku Generator
 - Backtracking fill → remove cells with unique solution guarantee
 - Difficulty: Easy (35 removed) → Expert (58 removed)
-- Symmetry option for aesthetic puzzles
 
 ### Blockudoku
 - 16 piece shapes (polyominoes)
@@ -158,7 +176,7 @@ cd myBoardGames
 
 ## 📊 Success Metrics
 
-- **80+ test cases** (engine perft + unit + integration)
+- **90+ test cases** (engine perft + unit + integration)
 - **< 1.5s cold start** on mid-range device
 - **< 40MB** APK size
 - **100% offline** — no internet required ever

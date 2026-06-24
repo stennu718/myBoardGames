@@ -12,6 +12,7 @@ import com.stennu718.myboardgames.feature.blockudoku.BlockudokuScreen
 import com.stennu718.myboardgames.feature.puzzles.PuzzlesScreen
 import com.stennu718.myboardgames.feature.daily.DailyChallengeScreen
 import com.stennu718.myboardgames.feature.onboarding.OnboardingScreen
+import com.stennu718.myboardgames.feature.multiplayer.MultiplayerScreen
 import com.stennu718.myboardgames.feature.profile.ProfileScreen
 import com.stennu718.myboardgames.feature.puzzlerush.PuzzleRushScreen
 import com.stennu718.myboardgames.feature.premium.PremiumScreen
@@ -29,6 +30,7 @@ sealed class Screen(val route: String) {
     data object Premium : Screen("premium")
     data object Stats : Screen("stats")
     data object Onboarding : Screen("onboarding")
+    data object Multiplayer : Screen("multiplayer")
 }
 
 @Composable
@@ -73,6 +75,9 @@ fun AppNavHost(
         }
         composable(Screen.Onboarding.route) {
             OnboardingScreen(navController = navController)
+        }
+        composable(Screen.Multiplayer.route) {
+            MultiplayerScreen(navController = navController)
         }
     }
 }
