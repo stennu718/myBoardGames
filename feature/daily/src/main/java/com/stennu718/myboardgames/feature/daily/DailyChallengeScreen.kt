@@ -13,25 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-data class DailyChallenge(
-    val name: String,
-    val description: String,
-    val isCompleted: Boolean,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyChallengeScreen(navController: NavController) {
-    val challenges = remember {
-        listOf(
-            DailyChallenge("Chess Puzzle", "Solve 3 chess puzzles", false, Icons.Default.Psychology),
-            DailyChallenge("Sudoku", "Complete a Medium Sudoku", false, Icons.Default.GridView),
-            DailyChallenge("Checkers", "Win 2 Checkers games", false, Icons.Default.GridOn),
-            DailyChallenge("Blockudoku", "Score 100+ points", false, Icons.Default.ViewWeek),
-            DailyChallenge("Memory", "Match 10 pairs", false, Icons.Default.Memory)
-        )
-    }
+    val challengeManager = remember { DailyChallengeManager() }
+    val challenges = remember { challengeManager.getTodayChallenges() }
+    val todayDate = remember { challengeManager.getTodayDateString() }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
@@ -40,6 +27,12 @@ fun DailyChallengeScreen(navController: NavController) {
             "Daily Challenge",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            todayDate,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -58,7 +51,16 @@ fun DailyChallengeScreen(navController: NavController) {
             items(challenges) { challenge ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { /* Navigate to game */ }
+                    onClick = {
+                        // Navigate to the game
+                        when (challenge.gameType) {
+                            "chess" -> navController.navigate("chess")
+                            "checkers" -> navController.navigate("checkers")
+                            "sudoku" -> navController.navigate("sudoku")
+                            "blockudoku" -> navController.navigate("blockudoku")
+                            else -> navController.navigate("puzzles")
+                        }
+                    }
                 ) {
                     Row(
                         modifier = Modifier
@@ -67,15 +69,21 @@ fun DailyChallengeScreen(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            challenge.icon,
-                            contentDescription = challenge.name,
+                            when (challenge.gameType) {
+                                "chess" -> Icons.Default.Psychology
+                                "checkers" -> Icons.Default.GridOn
+                                "sudoku" -> Icons.Default.GridView
+                                "blockudoku" -> Icons.Default.ViewWeek
+                                else -> Icons.Default.Casino
+                            },
+                            contentDescription = challenge.gameType,
                             modifier = Modifier.size(40.dp),
-                            tint = if (challenge.isCompleted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                challenge.name,
+                                challenge.gameType.replaceFirstChar { it.uppercase() },
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -85,13 +93,12 @@ fun DailyChallengeScreen(navController: NavController) {
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        if (challenge.isCompleted) {
-                            Icon(
-                                Icons.Default.CheckCircle,
-                                contentDescription = "Completed",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
+                        Text(
+                            "+${challenge.xpReward} XP",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
