@@ -6,12 +6,7 @@ import org.junit.Assert.*
 class AchievementTest {
 
     @Test
-    fun testFirstWin() {
-        val stats = listOf(
-            com.stennu718.myboardgames.core.database.GameStats("chess", gamesPlayed = 1, gamesWon = 1)
-        )
-        val vm = ProfileViewModel(object : StatsRepository(mockk()) {})
-        // Simplified test - verify achievement enum values
+    fun testFirstWinRequirement() {
         assertEquals(1, Achievement.FIRST_WIN.requirement)
     }
 
@@ -50,13 +45,21 @@ class AchievementTest {
         val level = (totalXp / 1000) + 1
         assertEquals(1, level)
     }
-}
 
-// Minimal mock for testing
-private fun mockk(): com.stennu718.myboardgames.core.database.GameStatsDao {
-    return object : com.stennu718.myboardgames.core.database.GameStatsDao {
-        override suspend fun getAll(): List<com.stennu718.myboardgames.core.database.GameStats> = emptyList()
-        override suspend fun getByType(type: String): com.stennu718.myboardgames.core.database.GameStats? = null
-        override suspend fun upsert(stats: com.stennu718.myboardgames.core.database.GameStats) {}
+    @Test
+    fun testTotalAchievementsCount() {
+        assertTrue("Should have at least 10 achievements", Achievement.entries.size >= 10)
+    }
+
+    @Test
+    fun testAchievementDescriptionsUnique() {
+        val descriptions = Achievement.entries.map { it.description }
+        assertEquals(descriptions.size, descriptions.toSet().size)
+    }
+
+    @Test
+    fun testAchievementIdsUnique() {
+        val ids = Achievement.entries.map { it.id }
+        assertEquals(ids.size, ids.toSet().size)
     }
 }
