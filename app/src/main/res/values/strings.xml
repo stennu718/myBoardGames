@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyBoardGames</string>
+    <string name="nav_chess">Chess</string>
+    <string name="nav_checkers">Checkers</string>
+    <string name="nav_sudoku">Sudoku</string>
+    <string name="nav_blockudoku">Blockudoku</string>
+    <string name="nav_puzzles">Puzzles</string>
+    <string name="nav_daily">Daily</string>
+    <string name="nav_profile">Profile</string>
+</resources>

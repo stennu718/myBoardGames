@@ -1,0 +1,28 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "MyBoardGames"
+include(":app")
+include(":core:common")
+include(":core:database")
+include(":core:ui")
+include(":feature:chess")
+include(":feature:checkers")
+include(":feature:sudoku")
+include(":feature:blockudoku")
+include(":feature:puzzles")
+include(":feature:daily")
+include(":feature:profile")
