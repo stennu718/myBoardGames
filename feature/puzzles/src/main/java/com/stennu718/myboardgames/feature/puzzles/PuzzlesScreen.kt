@@ -14,73 +14,61 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.stennu718.myboardgames.feature.puzzles.ui.*
 
-data class MiniGame(
+data class MiniGameItem(
     val name: String,
     val description: String,
     val icon: ImageVector
 )
 
-val miniGames = listOf(
-    MiniGame("2048", "Slide tiles to reach 2048", Icons.Default.Numbers),
-    MiniGame("Minesweeper", "Find the mines", Icons.Default.Explore),
-    MiniGame("Memory", "Match card pairs", Icons.Default.Psychology),
-    MiniGame("Tic-Tac-Toe", "Three in a row", Icons.Default.Grid3x3),
-    MiniGame("Word Search", "Find hidden words", Icons.Default.Search),
-    MiniGame("Simon", "Repeat the pattern", Icons.Default.TouchApp)
+val miniGameItems = listOf(
+    MiniGameItem("2048", "Slide tiles to reach 2048", Icons.Default.Numbers),
+    MiniGameItem("Minesweeper", "Find the mines", Icons.Default.Explore),
+    MiniGameItem("Memory", "Match card pairs", Icons.Default.Psychology),
+    MiniGameItem("Tic-Tac-Toe", "Three in a row", Icons.Default.Grid3x3)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PuzzlesScreen(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        Text(
-            "Puzzle Games",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
+    var selectedGame by remember { mutableStateOf<String?>(null) }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(miniGames) { game ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f),
-                    onClick = { /* Navigate to specific game */ }
+    when (selectedGame) {
+        "2048" -> Game2048Screen(onBack = { selectedGame = null })
+        "Minesweeper" -> MinesweeperScreen(onBack = { selectedGame = null })
+        "Memory" -> MemoryGameScreen(onBack = { selectedGame = null })
+        "Tic-Tac-Toe" -> TicTacToeScreen(onBack = { selectedGame = null })
+        else -> {
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                Text(
+                    "Puzzle Games",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            game.icon,
-                            contentDescription = game.name,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            game.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            game.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    items(miniGameItems) { game ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                            onClick = { selectedGame = game.name }
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxSize().padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Icon(game.icon, contentDescription = game.name, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.primary)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(game.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(game.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
                     }
                 }
             }
