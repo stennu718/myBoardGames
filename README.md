@@ -1,3 +1,8 @@
+[![CI](https://github.com/stennu718/myBoardGames/actions/workflows/android.yml/badge.svg)](https://github.com/stennu718/myBoardGames/actions/workflows/android.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.9+-7f52ff.svg)](https://kotlinlang.org/)
+[![Android](https://img.shields.io/badge/Android-14+-3ddc84.svg)](https://developer.android.com/)
+
 # myBoardGames
 
 **Android application** — practice Chess, Checkers, Sudoku, Blockudoku and other puzzle games.
