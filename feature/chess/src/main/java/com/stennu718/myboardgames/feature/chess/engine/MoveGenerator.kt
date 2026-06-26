@@ -173,7 +173,7 @@ class MoveGenerator(private val board: ChessBoard) {
     }
 
     fun isInCheck(color: Color): Boolean {
-        val kingSquare = board.findKing(color)
+        val kingSquare = board.findKing(color) ?: return false
         val opponent = if (color == Color.WHITE) Color.BLACK else Color.WHITE
         return board.isSquareAttacked(kingSquare, opponent)
     }

@@ -18,7 +18,7 @@ class StatsRepository @Inject constructor(
             gamesPlayed = (existing?.gamesPlayed ?: 0) + 1,
             gamesWon = (existing?.gamesWon ?: 0) + if (won) 1 else 0,
             bestScore = maxOf(existing?.bestScore ?: 0, score),
-            totalXp = (existing?.totalXp ?: 0) + if (won) 100 else 25 + score
+            totalXp = (existing?.totalXp ?: 0) + (if (won) 100 else 25) + score
         )
         gameStatsDao.upsert(updated)
     }

@@ -107,7 +107,7 @@ class ChessBoard {
         board[square.row][square.col] = piece
     }
 
-    fun findKing(color: Color): Square {
+    fun findKing(color: Color): Square? {
         for (row in 0..7) {
             for (col in 0..7) {
                 val piece = board[row][col]
@@ -116,7 +116,7 @@ class ChessBoard {
                 }
             }
         }
-        throw IllegalStateException("King not found for $color")
+        return null
     }
 
     fun toFEN(): String {
