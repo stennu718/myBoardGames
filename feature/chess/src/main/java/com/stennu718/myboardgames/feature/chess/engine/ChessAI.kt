@@ -64,7 +64,7 @@ class ChessAI(var maxDepth: Int = 4) {
             return evaluate(board)
         }
 
-        val moves = generator.generatePseudoLegalMoves(board.turn)
+        val moves = generator.generateLegalMoves()
         if (moves.isEmpty()) {
             if (generator.isCheckmate()) {
                 return if (isMaximizing) -99999 else 99999
@@ -79,7 +79,6 @@ class ChessAI(var maxDepth: Int = 4) {
             var maxEval = Int.MIN_VALUE
             for (move in moves) {
                 val newBoard = board.simulateMove(move)
-                if (newBoard.isInCheck(board.turn)) continue
                 val eval = minimax(newBoard, depth - 1, a, b, false)
                 maxEval = max(maxEval, eval)
                 a = max(a, eval)
@@ -90,7 +89,6 @@ class ChessAI(var maxDepth: Int = 4) {
             var minEval = Int.MAX_VALUE
             for (move in moves) {
                 val newBoard = board.simulateMove(move)
-                if (newBoard.isInCheck(board.turn)) continue
                 val eval = minimax(newBoard, depth - 1, a, b, true)
                 minEval = min(minEval, eval)
                 b = min(b, eval)

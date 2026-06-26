@@ -24,6 +24,7 @@ class ChessViewModel : ViewModel() {
     val uiState: StateFlow<ChessUiState> = _uiState.asStateFlow()
 
     private val ai = ChessAI(3)
+    private val boardHistory = mutableListOf<String>()
 
     fun onSquareClick(square: Square) {
         val state = _uiState.value
@@ -69,6 +70,7 @@ class ChessViewModel : ViewModel() {
 
     private fun makeMove(move: Move) {
         val state = _uiState.value
+        boardHistory.add(state.board.toFen())
         val newBoard = state.board.simulateMove(move)
 
         updateCastlingRights(newBoard, move)
@@ -106,6 +108,7 @@ class ChessViewModel : ViewModel() {
         viewModelScope.launch {
             val aiMove = ai.findBestMove(board)
             if (aiMove != null) {
+                boardHistory.add(board.toFen())
                 val newBoard = board.simulateMove(aiMove)
                 updateCastlingRights(newBoard, aiMove)
                 newBoard.enPassantTarget = if (aiMove.piece.type == PieceType.PAWN &&
@@ -163,6 +166,7 @@ class ChessViewModel : ViewModel() {
     }
 
     fun newGame() {
+        boardHistory.clear()
         _uiState.value = ChessUiState(difficulty = _uiState.value.difficulty)
     }
 
@@ -173,26 +177,20 @@ class ChessViewModel : ViewModel() {
 
     fun undoMove() {
         val state = _uiState.value
-        if (state.moveHistory.size >= 2) {
+        if (boardHistory.size >= 2) {
+            // Remove last two snapshots (player move + AI move)
+            boardHistory.removeAt(boardHistory.lastIndex)
+            boardHistory.removeAt(boardHistory.lastIndex)
+            val fen = boardHistory.lastOrNull() ?: ChessBoard().toFen()
+            val newBoard = ChessBoard.fromFEN(fen)
             val newHistory = state.moveHistory.dropLast(2)
-            val newBoard = ChessBoard()
-            for (move in newHistory) {
-                val gen = MoveGenerator(newBoard)
-                val legalMoves = gen.generateLegalMoves()
-                val matching = legalMoves.find {
-                    it.from == move.from && it.to == move.to && it.promotion == move.promotion
-                } ?: continue
-                newBoard.simulateMove(matching)
-                updateCastlingRights(newBoard, matching)
-                newBoard.turn = if (newBoard.turn == Color.WHITE) Color.BLACK else Color.WHITE
-            }
             _uiState.value = state.copy(
                 board = newBoard,
                 moveHistory = newHistory,
                 selectedSquare = null,
                 legalMoves = emptyList(),
                 lastMove = newHistory.lastOrNull(),
-                gameStatus = ""
+                gameStatus = getGameStatus(newBoard)
             )
         }
     }

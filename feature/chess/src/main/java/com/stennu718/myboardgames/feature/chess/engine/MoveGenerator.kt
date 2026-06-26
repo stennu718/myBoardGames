@@ -227,6 +227,8 @@ fun ChessBoard.simulateMove(move: Move): ChessBoard {
         }
     }
 
+    newBoard.turn = if (move.piece.color == Color.WHITE) Color.BLACK else Color.WHITE
+
     return newBoard
 }
 
@@ -248,17 +250,17 @@ fun ChessBoard.isSquareAttacked(square: Square, byColor: Color): Boolean {
                 }
                 PieceType.BISHOP -> {
                     if (kotlin.math.abs(r - square.row) == kotlin.math.abs(c - square.col)) {
-                        if (isPathClear(from, square)) return true
+                        if (isPathClear(from, square, board)) return true
                     }
                 }
                 PieceType.ROOK -> {
                     if (r == square.row || c == square.col) {
-                        if (isPathClear(from, square)) return true
+                        if (isPathClear(from, square, board)) return true
                     }
                 }
                 PieceType.QUEEN -> {
                     if (r == square.row || c == square.col || kotlin.math.abs(r - square.row) == kotlin.math.abs(c - square.col)) {
-                        if (isPathClear(from, square)) return true
+                        if (isPathClear(from, square, board)) return true
                     }
                 }
                 PieceType.KING -> {
@@ -270,21 +272,18 @@ fun ChessBoard.isSquareAttacked(square: Square, byColor: Color): Boolean {
     return false
 }
 
-private fun isPathClear(from: Square, to: Square): Boolean {
-    val dr = (to.row - from.row).coerceIn(-1, 1)
-    val dc = (to.col - from.col).coerceIn(-1, 1)
+private fun isPathClear(from: Square, to: Square, board: Array<Array<Piece?>>): Boolean {
+    val dr = (to.row - from.row).sign
+    val dc = (to.col - from.col).sign
     var r = from.row + dr
     var c = from.col + dc
     while (r != to.row || c != to.col) {
-        val piece = board[r][c]
-        if (piece != null) return false
+        if (board[r][c] != null) return false
         r += dr
         c += dc
     }
     return true
 }
-
-private val board = Array(8) { Array<Piece?>(8) { null } }
 
 fun ChessBoard.copy(): ChessBoard {
     val newBoard = ChessBoard()
