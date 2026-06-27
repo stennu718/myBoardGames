@@ -2,6 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9+-7f52ff.svg)](https://kotlinlang.org/)
 [![Android](https://img.shields.io/badge/Android-14+-3ddc84.svg)](https://developer.android.com/)
+[![Version](https://img.shields.io/github/v/release/stennu718/myBoardGames)](https://github.com/stennu718/myBoardGames/releases)
 
 # myBoardGames
 
