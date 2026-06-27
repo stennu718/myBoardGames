@@ -173,7 +173,7 @@ class MoveGenerator(private val board: ChessBoard) {
     }
 
     fun isInCheck(color: Color): Boolean {
-        val kingSquare = board.findKing(color) ?: return false
+        val kingSquare = board.findKing(color)
         val opponent = if (color == Color.WHITE) Color.BLACK else Color.WHITE
         return board.isSquareAttacked(kingSquare, opponent)
     }
@@ -227,7 +227,49 @@ fun ChessBoard.simulateMove(move: Move): ChessBoard {
         }
     }
 
-    newBoard.turn = if (move.piece.color == Color.WHITE) Color.BLACK else Color.WHITE
+    // Update castling rights
+    if (move.piece.type == PieceType.KING) {
+        if (move.piece.color == Color.WHITE) {
+            newBoard.whiteCanCastleKingSide = false
+            newBoard.whiteCanCastleQueenSide = false
+        } else {
+            newBoard.blackCanCastleKingSide = false
+            newBoard.blackCanCastleQueenSide = false
+        }
+    }
+    if (move.piece.type == PieceType.ROOK) {
+        if (move.from.row == 7 && move.from.col == 7) newBoard.whiteCanCastleKingSide = false
+        if (move.from.row == 7 && move.from.col == 0) newBoard.whiteCanCastleQueenSide = false
+        if (move.from.row == 0 && move.from.col == 7) newBoard.blackCanCastleKingSide = false
+        if (move.from.row == 0 && move.from.col == 0) newBoard.blackCanCastleQueenSide = false
+    }
+    // Captured rook also removes castling rights
+    if (move.captured?.type == PieceType.ROOK) {
+        if (move.to.row == 7 && move.to.col == 7) newBoard.whiteCanCastleKingSide = false
+        if (move.to.row == 7 && move.to.col == 0) newBoard.whiteCanCastleQueenSide = false
+        if (move.to.row == 0 && move.to.col == 7) newBoard.blackCanCastleKingSide = false
+        if (move.to.row == 0 && move.to.col == 0) newBoard.blackCanCastleQueenSide = false
+    }
+
+    // Update en passant target
+    if (move.piece.type == PieceType.PAWN && kotlin.math.abs(move.to.row - move.from.row) == 2) {
+        newBoard.enPassantTarget = Square((move.from.row + move.to.row) / 2, move.from.col)
+    } else {
+        newBoard.enPassantTarget = null
+    }
+
+    // Update move counters
+    if (move.piece.type == PieceType.PAWN || move.captured != null) {
+        newBoard.halfMoveClock = 0
+    } else {
+        newBoard.halfMoveClock = board.halfMoveClock + 1
+    }
+    if (move.piece.color == Color.BLACK) {
+        newBoard.fullMoveNumber = board.fullMoveNumber + 1
+    }
+
+    // Switch turn
+    newBoard.turn = if (board.turn == Color.WHITE) Color.BLACK else Color.WHITE
 
     return newBoard
 }
@@ -250,17 +292,17 @@ fun ChessBoard.isSquareAttacked(square: Square, byColor: Color): Boolean {
                 }
                 PieceType.BISHOP -> {
                     if (kotlin.math.abs(r - square.row) == kotlin.math.abs(c - square.col)) {
-                        if (isPathClear(from, square, board)) return true
+                        if (isPathClear(from, square)) return true
                     }
                 }
                 PieceType.ROOK -> {
                     if (r == square.row || c == square.col) {
-                        if (isPathClear(from, square, board)) return true
+                        if (isPathClear(from, square)) return true
                     }
                 }
                 PieceType.QUEEN -> {
                     if (r == square.row || c == square.col || kotlin.math.abs(r - square.row) == kotlin.math.abs(c - square.col)) {
-                        if (isPathClear(from, square, board)) return true
+                        if (isPathClear(from, square)) return true
                     }
                 }
                 PieceType.KING -> {
@@ -272,18 +314,21 @@ fun ChessBoard.isSquareAttacked(square: Square, byColor: Color): Boolean {
     return false
 }
 
-private fun isPathClear(from: Square, to: Square, board: Array<Array<Piece?>>): Boolean {
-    val dr = (to.row - from.row).sign
-    val dc = (to.col - from.col).sign
+private fun isPathClear(from: Square, to: Square): Boolean {
+    val dr = (to.row - from.row).coerceIn(-1, 1)
+    val dc = (to.col - from.col).coerceIn(-1, 1)
     var r = from.row + dr
     var c = from.col + dc
     while (r != to.row || c != to.col) {
-        if (board[r][c] != null) return false
+        val piece = board[r][c]
+        if (piece != null) return false
         r += dr
         c += dc
     }
     return true
 }
+
+private val board = Array(8) { Array<Piece?>(8) { null } }
 
 fun ChessBoard.copy(): ChessBoard {
     val newBoard = ChessBoard()
