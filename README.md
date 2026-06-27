@@ -14,6 +14,8 @@ Built with Kotlin + Jetpack Compose. All games are self-contained — no third-p
 
 ![Gameplay](docs/screenshot.png)
 
+![Demo](docs/demo.gif)
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, architecture decisions, and contribution guidelines.
