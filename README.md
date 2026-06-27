@@ -11,6 +11,8 @@ Built with Kotlin + Jetpack Compose. All games are self-contained — no third-p
 
 ---
 
+![Gameplay](docs/screenshot.png)
+
 ## 🎯 Vision
 
 A single offline-first Android app with fully local game logic:
