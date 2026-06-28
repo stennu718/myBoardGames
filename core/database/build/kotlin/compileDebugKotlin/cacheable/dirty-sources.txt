@@ -1,4 +1,0 @@
-/tmp/myBoardGames/core/database/src/main/java/com/stennu718/myboardgames/core/database/AppDatabase.kt
-/tmp/myBoardGames/core/database/src/main/java/com/stennu718/myboardgames/core/database/Daos.kt
-/tmp/myBoardGames/core/database/src/main/java/com/stennu718/myboardgames/core/database/Entities.kt
-/tmp/myBoardGames/core/database/src/main/java/com/stennu718/myboardgames/core/database/DatabaseModule.kt

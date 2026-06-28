@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.stennu718.myboardgames.core.ui" >
-
-    <uses-sdk android:minSdkVersion="26" />
-
-</manifest>
