@@ -37,6 +37,23 @@ cd myBoardGames
 
 ![Gameplay](docs/screenshot.png)
 
+## Technical Highlights
+
+- **Language**: Kotlin + Jetpack Compose
+- **Architecture**: Modular (11 feature modules + core modules)
+- **Build**: Gradle with Kotlin DSL
+- **Target**: Android 14+
+- **Offline**: No internet required, no accounts, no ads
+- **CI/CD**: GitHub Actions
+
+## Project Structure
+
+```
+app/                  # Main application module
+core/                 # Shared modules (database, UI, ads, sound, review, cloud)
+feature/              # Game modules (chess, checkers, sudoku, blockudoku, etc.)
+```
+
 ## License
 
 MIT
